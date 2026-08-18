@@ -23,5 +23,5 @@ var d = 10;
 console.log(Number(c) + d);
 
 var testee;
-
+var git;
 console.log(typeof testee);
