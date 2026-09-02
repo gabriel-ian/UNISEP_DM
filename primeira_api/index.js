@@ -4,107 +4,99 @@ const app = new express();
 
 app.use(express.json());
 
-var contador_id = 1;
+let contador_id = 1;
+
 var data = [{
     id: 1,
-    nome: "Gabriel",
-    cpf:"99999999999",
+    nome: "Guilherme",
+    cpf: "123456789",
     status: true
 }];
 
-app.get("/listar", (request, response)=>{
-    return response.send(data)
 
+app.get("/listar", (request, response)=>{
+    return response.send(data);
 });
 
 app.get("/listar/:id", (request, response)=>{
     const { id } = request.params;
 
-    const pessoa = data.filter((item)=>{    
+    const pessoa = data.filter((item) => {
         return item.id == id
     });
 
-    if (pessoa. length <= 0 ){
+    if (pessoa.length == 0) {
         response.status(400).send({
-            //msg : "Pessoa do código " + id + "não encontrado!"    
-            msg : `Pessoa do código ${id} não encontrado!`    
+            msg: "Pessoa do código " + id + " não encontrada"
         });
     }
 
-    response.send(pessoa);
+    response.send(pessoa);  
 
 });
 
-app.post("/cadastrar", (request, response)=>{
-    // const nome = request.body.nome;
-    // const cpf = request.body.cpf;
-    // const status = request.body.status;
-    const { nome, cpf, status } = request.body;
+app.post("/cadastrar", (request, response) =>{
+    const {nome, cpf, status} = request.body;
 
-    //console.log('DADOS DA PESSOA:');
-    //console.log(nome);
-    //console.log(cpf);
-    //console.log(status);
-
-    if (!nome) {
+    if (!nome){
         return response.status(300).send("O campo NOME é obrigatório");
-    } else if (!cpf) {
-        return response.status(300).send("O campo cpf é obrigatório");
+    } else if (!cpf){
+        return response.status(300).send("O campo CPF é obrigatório");
     }
 
     contador_id++
-    
-    data.push({ id: contador_id, nome, cpf, status});
 
-    return response.send("Pessoa cadastrada com sucesso!");
-}); 
+    data.push({
+        id: contador_id,
+        nome,
+        cpf,
+        status
+    });
 
-app.delete("/deletar/:id", (request, response)=>{
-    const { id } = request.params;
+    return response.send("Pessoa cadastrada com sucesso!")
+});
+
+app.delete("/deletar/:id", (request, response) =>{
+    const {id} = request.params;
 
     const indice = data.findIndex((item) => {
         return item.id == id
     });
 
-    if (indice !== -1) {
+    if (indice !== -1){
         data.splice(indice, 1);
     }
-
-
+    
     response.send(data);
-});
+
+})
 
 app.put("/atualizar", (request, response)=>{
-    const { id, nome, cpf, status} = request.body;
+    const {id, nome, cpf, status} = request.body;
 
-    if(!id){
-        response.status(300).send({
-            msg: "O campo id é obrigatório!"
-        });
-    }
-
-    const indicePessoa = data.findIndex((item) => {
-        return item.id = id;
+    const IndicePessoa = data.findIndex((item) => {
+        return item.id == id;
     });
 
-    if(indicePessoa != -1){
-        response.status(400).send({
-            msg : `O id ${id} não existe!`
-        });
+    if (!id){
+        return response.status(300).send("O campo ID é obrigatório");
     }
 
-    data[indicePessoa].nome = nome;
-    data[indicePessoa].cpf = cpf;
-    data[indicePessoa].status = status;
+    if (IndicePessoa == -1){
+        response.status(400).send("O campo ID não foi encontrado");
+    } else {
+        data[IndicePessoa].nome = nome;
+        data[IndicePessoa].cpf = cpf;
+        data[IndicePessoa].status = status;
 
-    response.send((data[indicePessoa]));
-    
-});
+        response.send(data[IndicePessoa]);
+    }
+})
+
 
 app.listen(8080, ()=>{
-    console.log("O servidor está rodando na porta 8080!");
+    console.log("O servidor está rodando na porta 8080")    
 });
-
 
 //status 500 = Erro Interno
 //status 200 = Sucesso
