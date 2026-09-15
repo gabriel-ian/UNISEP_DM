@@ -77,11 +77,6 @@ app.put("/atualizar", async (req, res) => {
     }
 });
    
-
-app.listen(8080, () => {
-    console.log("O servidor está rodanddo na porta 8080");
-});
-
 app.delete("/excluir/:id", async (req, res) => {
     const { id } = req.params;
 
@@ -95,3 +90,8 @@ app.delete("/excluir/:id", async (req, res) => {
         res.send({ msg: "Não foi possível excluir o produto!" });
     }
 });
+
+app.listen(8080, () => {
+    console.log("O servidor está rodanddo na porta 8080");
+});
+
